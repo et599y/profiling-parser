@@ -3,7 +3,7 @@ var fs = require('fs')
 var _ = require('underscore');
 var scaler = require('minmaxscaler');
 var json2xls = require('json2xls');
-var folder = "0507_json_return"
+var folder = "0507_json_return" // change file dir
 var num = 0
 
 let org_cat = JSON.parse(fs.readFileSync(`./${folder}/org_1.json`)); // baseline

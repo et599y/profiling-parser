@@ -7,6 +7,7 @@ const output_type = 'function'
 
 let funcArr = [];
 const fileDir = '0507_json_func' // input file dir 
+const outputDir = 'func_call_object' // output file dir
 
 async function auto_count(){
     const files = fs.readdirSync(`./${fileDir}/`);
@@ -57,7 +58,7 @@ function countFunc(path, outputname){
             }
         })
         .on('close', function(){  
-            fs.writeFileSync(`./func_call_object/${outputname}.json`, JSON.stringify(getFrequency(funcArr), null, 2))
+            fs.writeFileSync(`./${outputDir}/${outputname}.json`, JSON.stringify(getFrequency(funcArr), null, 2))
             resolve()
         });
     });

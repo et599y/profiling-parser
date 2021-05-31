@@ -8,6 +8,7 @@ const output_type = 'time'
 
 let funcArr = [];
 const fileDir = '0507_json_time' // input file dir 
+const outputDir = 'func_time_object' // output file dir
 
 async function auto_count(){
     fs.readdirSync(`./${fileDir}/`).forEach(file => {
@@ -69,7 +70,7 @@ function countFunc(path, outputname){
             funcArr.sort(function(a, b) {
                 return b.time - a.time;
             })
-            fs.writeFileSync(`./func_time_object/${outputname}.json`, JSON.stringify(funcArr, null, 2))
+            fs.writeFileSync(`./${outputDir}/${outputname}.json`, JSON.stringify(funcArr, null, 2))
             resolve()
         });
     });

@@ -4,7 +4,7 @@ var _ = require('underscore');
 var scaler = require('minmaxscaler');
 var json2xls = require('json2xls');
 const fileDir = '0507_json_return' // change file dir
-var output_type = "float" //str, int, float, bool
+var output_type = "float" // change type: str, int, float, bool
 var num = 0
 
 // 計算字串相異度

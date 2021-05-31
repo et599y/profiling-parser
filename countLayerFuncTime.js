@@ -1,13 +1,15 @@
-// 整理前兩層的total cost time
+// 統整前兩層的total cost time
 const fs = require('fs');
 let json2xls = require('json2xls');
 
-fs.readdirSync('./0507_json_time/').forEach(file => {
+const fileDir = '0507_json_time' // change file dir
+
+fs.readdirSync(`./${fileDir}/`).forEach(file => {
     const fileName = file.split('.')[0];
     // if(fileName.includes('Xception')){
         let totaljson = []
         console.log(fileName)
-        fileData = JSON.parse(fs.readFileSync(`./0507_json_time/${fileName}.json`));
+        fileData = JSON.parse(fs.readFileSync(`./${fileDir}/${fileName}.json`));
         for(let i=0; i < fileData.length; i++){  
             let temp = [{'name':fileData[i].name, 'time':fileData[i].time}]
             fileData[i].child.forEach(element => { 

@@ -1,4 +1,4 @@
-// 整理前兩層的total func count
+// 統整前兩層的total func count
 const fs = require('fs');
 let json2xls = require('json2xls');
 let temp = []
