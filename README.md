@@ -28,7 +28,7 @@ node nLayer_new.js
 ```
 node main_v1.js
 ```
-- 逐行讀取 txt & parser (沒有檔案大小限制)
+- 逐行讀取 txt & parser (沒有檔案大小限制) [尚未完成]
 ```
 node main_v2.js
 ```
