@@ -38,7 +38,7 @@ node --max-old-space-size=7168 main_v2.js
 ```
 
 ### Analytical method
-* Function
+#### Function
 
 - 統計各 function 呼叫次數
 ```
@@ -56,7 +56,7 @@ node countLayerFunc.js
 ```
 node 
 ```
-* Cost time
+#### Cost time
 - 統計各 function total cost time
 ```
 node countTotalFuncTime.js
@@ -70,7 +70,7 @@ node countTotalTimeMinus.js
 node countLayerFuncTime.js
 ```
 
-* Return value
+#### Return value
 - 以 baseline 計算各檔案 different types of return values 的差異距離 (int, float, string, bool)
 ```
 node countOutputDistance.js
