@@ -5,8 +5,8 @@ const fileDir = '0507_json_return_Layer3'
 let count_diff = 0;
 let a=0,b=0,c=0;
 
-const left = JSON.parse(fs.readFileSync(`./${fileDir}/org_3.json`));
-const right = JSON.parse(fs.readFileSync(`./${fileDir}/org_2.json`));
+const left = JSON.parse(fs.readFileSync(`./${fileDir}/org_3.json`)); // 帶入欲比較檔案名稱1
+const right = JSON.parse(fs.readFileSync(`./${fileDir}/org_2.json`)); // 帶入欲比較檔案名稱2
 const delta = jsondiffpatch.diff(left, right);
 fs.writeFileSync('./delta.json', JSON.stringify(delta, null, 2)); // diff list 存起來
 printValue_update(delta, "", ",")
