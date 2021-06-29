@@ -37,6 +37,12 @@ node main_v2.js
 node --max-old-space-size=7168 main_v2.js
 ```
 
+### Count the number of diff
+- 比較兩個檔案有出現差異的數量
+```
+node countDiffNum.js
+```
+
 ### Analytical method
 #### Function
 
