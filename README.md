@@ -28,6 +28,8 @@ node nLayer_new.js
 ```
 node main_v1.js
 ```
+> 若出現 RangeError: Invalid string length，把程式中的 JSON.stringify() 後面的 (null, 2) 移除，縮小檔案大小。
+
 - 逐行讀取 txt & parser (沒有檔案大小限制) [尚未完成]
 ```
 node main_v2.js
