@@ -57,10 +57,7 @@ node countTotalFuncMinus.js
 ```
 node countLayerFunc.js
 ```
-- 以 baseline 計算各檔案前兩層 function 的呼叫次數差值
-```
-node 
-```
+
 #### Cost time
 - 統計各 function total cost time
 ```
