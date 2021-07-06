@@ -20,10 +20,7 @@ node runpy.js
 ```
 
 ### Parser to json format
-- parser x~y 層的 profiling data (x, y自行定義)
-```
-node nLayer_new.js
-```
+
 - 以 function 的 start & end index 為基準的parser
 ```
 node main_v1.js
