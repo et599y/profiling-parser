@@ -1,13 +1,13 @@
-// 統整前兩層的total func count
+// 統整前兩層的total func call
 const fs = require('fs');
 let json2xls = require('json2xls');
 let temp = []
 let num = 0
-const fileDir = '0507_json_func' // change file dir
+const fileDir = '0225_json_func_new' // change file dir
 
 fs.readdirSync(`./${fileDir}/`).forEach(file => {
     const fileName = file.split('.')[0];
-    // if(fileName.includes('Xception')){
+    if(fileName.includes('VGG16')){
         let totaljson = []
         console.log(fileName)
         fileData = JSON.parse(fs.readFileSync(`./${fileDir}/${fileName}.json`));
@@ -24,17 +24,13 @@ fs.readdirSync(`./${fileDir}/`).forEach(file => {
                 }
             });
         
-            // // 計算第一層數量
-            // for(let p=1; p < temp.length; p++){
-            //     temp[0].count += temp[p].count; //所有第二層加總等於第一層數量
-            // }
-            // console.log(temp)
             totaljson = totaljson.concat(temp);
             fs.writeFileSync(`./${fileName}.xlsx`, json2xls(totaljson), 'binary'); // 結果存為excel 
         }
-    // }
+    }
 });
 
+// 同 func 累加
 function tempCheck(func, c){
     let check = false
     temp.forEach(x=>{

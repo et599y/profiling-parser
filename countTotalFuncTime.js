@@ -4,11 +4,10 @@ const { SSL_OP_SSLEAY_080_CLIENT_DH_BUG } = require('constants');
 var fs = require('fs'),
     readline = require('readline');
 const { resolve } = require('path');
-const output_type = 'time'
 
 let funcArr = [];
-const fileDir = '0507_json_time' // input file dir 
-const outputDir = 'func_time_object' // output file dir
+const fileDir = '0225_json_time' // input file dir 
+const outputDir = 'func_time' // save file dir
 
 async function auto_count(){
     fs.readdirSync(`./${fileDir}/`).forEach(file => {
@@ -17,25 +16,6 @@ async function auto_count(){
         let delta = `./${fileDir}/${file}`;
         countFunc(delta, fileName)
     })
-    // const category = ['bike', 'cat', 'car', 'dog', 'flag']
-    // const model = ['VGG16', 'VGG19', 'Resnet50', 'Inceptionv3', 'Xception']
-    // for(let i=0; i<category.length; i++){
-    //     // original
-    //     for(let j=0; j< model.length; j++){
-    //         funcArr = []
-    //         let delta = `./1215_json_${output_type}/${category[i]}_patch_${model[j]}.json`;
-    //         console.log(category[i], model[j])
-    //         await countFunc(delta, `${category[i]}_patch_${model[j]}_time`)
-    //     }
-
-    //     // adversarial
-    //     for(let j=0; j< model.length; j++){
-    //         funcArr = []
-    //         let delta = `./1215_json_${output_type}/${category[i]}_patch_${model[j]}_${model[j]}.json`;
-    //         console.log(category[i], model[j])
-    //         await countFunc(delta, `${category[i]}_patch_${model[j]}_${model[j]}_time`)
-    //     }
-    // }
 }
 auto_count()
 
@@ -70,6 +50,10 @@ function countFunc(path, outputname){
             funcArr.sort(function(a, b) {
                 return b.time - a.time;
             })
+            // 建立資料夾
+            if (!fs.existsSync(`./${outputDir}`)) {
+                fs.mkdirSync(`./${outputDir}`)
+            }
             fs.writeFileSync(`./${outputDir}/${outputname}.json`, JSON.stringify(funcArr, null, 2))
             resolve()
         });
