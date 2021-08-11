@@ -1,5 +1,5 @@
 const fs = require('fs');
-const output_type = "return" // define 分析的類別: func return time
+const output_type = "func" // define 分析的類別: func return time
 const fileDir = `0628_json_${output_type}_test_Layer3`
 let temp = []
 let temp_Arr = []

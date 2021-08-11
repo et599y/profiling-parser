@@ -4,17 +4,10 @@ const fileDir = `0628_json_${output_type}_test_Layer3`
 let temp = []
 let temp_Arr = []
 
-// 統計func call 次數
-function countFuncCall(fileData) {
+// 統計func's return value diff
+function countDiff(fileData, fileData2) {
     temp = []
-    fileData.forEach(element => {
-        let funcName = element.name
-        if (element.child.length == 0) {
-            tempCheck(funcName)
-        } else {
-            countDeepFunc(element.child)
-        }
-    });
+    countFunc(fileData, fileData2)
     return temp
 }
 
@@ -31,12 +24,17 @@ function tempCheck(func) {
     if (check == false) temp.push({ name: func, count: 1 })
 }
 
-function countDeepFunc(data) {
+function countFunc(benchmark, data) {
     // 判斷array size是否為空
-    if (data.length > 0) {
-        for (let i = 0; i < data.length; i++) {
-            tempCheck(data[i].name)
-            countDeepFunc(data[i].child)
+    if (benchmark.length > 0) {
+        // console.log('aaa', benchmark, data)
+        for (let i = 0; i < benchmark.length; i++) {
+            if(data[i]){
+                if(benchmark[i].name == data[i].name && benchmark[i].return != data[i].return){
+                    tempCheck(benchmark[i].name)
+                }
+                countFunc(benchmark[i].child, data[i].child)
+            }   
         }
     }
 }
@@ -46,10 +44,8 @@ function org_and_adv_duplicate() {
     for (let i = 1; i < 3; i++) {
         let left = JSON.parse(fs.readFileSync(`./${fileDir}/${i}-2.json`)); // org
         let right = JSON.parse(fs.readFileSync(`./${fileDir}/${i}-1.json`)); //adv
-        let arrayOne = countFuncCall(left)
-        let arrayTwo = countFuncCall(right)
-        let results = arrayOne.filter(({ count: id1 }) => !arrayTwo.some(({ count: id2 }) => id2 === id1)); // diff
-
+        let results = countDiff(left, right)
+        
         // results func name 存成 temp_Arr
         temp_Arr = [] // 每次清空
         results.forEach(fun => {
@@ -73,9 +69,7 @@ function org_duplicate() {
     const left = JSON.parse(fs.readFileSync(`./${fileDir}/1-2.json`)); // baseline
     for (let i = 2; i <= 3; i++) {
         const right = JSON.parse(fs.readFileSync(`./${fileDir}/${i}-2.json`));
-        let arrayOne = countFuncCall(left)
-        let arrayTwo = countFuncCall(right)
-        let results = arrayOne.filter(({ count: id1 }) => !arrayTwo.some(({ count: id2 }) => id2 === id1)); // diff
+        let results = countDiff(left, right)
 
         // results func name 存成 temp_Arr
         temp_Arr = [] // 每次清空
@@ -99,9 +93,7 @@ function adv_duplicate() {
     const left = JSON.parse(fs.readFileSync(`./${fileDir}/1-1.json`)) // baseline
     for (let i = 2; i <= 3; i++) {
         const right = JSON.parse(fs.readFileSync(`./${fileDir}/${i}-1.json`))
-        let arrayOne = countFuncCall(left)
-        let arrayTwo = countFuncCall(right)
-        let results = arrayOne.filter(({ count: id1 }) => !arrayTwo.some(({ count: id2 }) => id2 === id1)); // diff
+        let results = countDiff(left, right)
 
         // results func name 存成 temp_Arr
         temp_Arr = [] // 每次清空
