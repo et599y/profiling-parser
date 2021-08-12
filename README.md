@@ -14,20 +14,25 @@ npm install
 ## Code description
 > 執行前須確保資料夾、檔案名稱、parser type 等已修改
 
-### Batch processing profiling
+### Batch processing profiling for CNN model
 ```
-node runpy.js
+node runpy_patch.js
+```
+
+### Batch processing profiling for object detection
+```
+node runpy_object.js
 ```
 
 ### Parser to json format
 
-- 以 function 的 start & end index 為基準的parser
+- 以 function 的 start & end index 為基準的 parser
 ```
 node main_v1.js
 ```
-> 若出現 RangeError: Invalid string length，把程式中的 JSON.stringify() 後面的 (null, 2) 移除，縮小檔案大小。
+> 若出現 RangeError: Invalid string length，把程式中的 JSON.stringify() 後面的 (null, 2) 移除，縮小檔案大小。若檔案依然過大，使用下面方法執行。
 
-- 逐行讀取 txt & parser (沒有檔案大小限制) [尚未完成]
+- 逐行讀取 txt & parser (沒有檔案大小限制)
 ```
 node main_v2.js
 ```

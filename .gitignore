@@ -108,8 +108,8 @@ dist
 *.txt
 *.json
 *.xlsx
-*.py
-*.jpg
+# *.py
+# *.jpg
 .DS_store
 # keep
 !package-lock.json

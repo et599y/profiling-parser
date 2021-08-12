@@ -1,11 +1,11 @@
-// 需定義欲執行資料夾名稱與 parser 的 output_type
-// 更改 obj json format
+// 需定義欲執行資料夾名稱， parser 的 output_type，選擇 runAll() / runOne()
+// 更改 obj 參數 format
 
 const fs = require('fs');
 const { type } = require('os');
 let fileData = "";
 let results = "";
-const output_type = 'return' // define output type time, arg, return, func
+const output_type = 'func' // define output type time, return, func
 
 function getLayerMeta(startIndex) {
     // 處理 funName
@@ -16,13 +16,13 @@ function getLayerMeta(startIndex) {
     // 處理 key
     let obj = {
         name: '',
-        return: '', //////// output type要改 /////////////
+        // time: '', //////// output type要改 /////////////
         child: [],
     };
-    let info = {
-        arg: ""
-        // time: ""
-    };
+    // let info = {
+    //     arg: ""
+    //     time: ""
+    // };
     obj["name"] = funName; // save funName
 
     // start那行結束
@@ -58,8 +58,6 @@ function getLayerMeta(startIndex) {
         const costTimeEndIndex = fileData.indexOf('CostTime:', costTimeStartIndex) - 4; // 取return type
         obj["return"] = fileData.substring(costTimeStartIndex, costTimeEndIndex);
     }
-
-    // obj["i"] = info;
     return obj;
 }
 
@@ -122,48 +120,30 @@ function parseLayer() {
 
 // run all files
 function runAll(folderName){
-    const newFolderName = `0507_json_${output_type}`
     // 建立資料夾
+    const newFolderName = `0714_json_testSet2` // define folder name
     if (!fs.existsSync(`./${newFolderName}`)) {
         fs.mkdirSync(`./${newFolderName}`)
     }
 
     fs.readdirSync(`./${folderName}/`).forEach(file => {
         const fileName = file.split('.')[0];
-
-        // var readerStream = fs.createReadStream(`./${folderName}/${fileName}.txt`);
-        // readerStream.setEncoding("UTF8");
-        var writeStream = fs.createWriteStream(`./${newFolderName}/${fileName}.json`)
-
-        // readerStream.on("data", function(chunk) {
-        //     fileData += chunk.toString();
-        // });
-
-        // readerStream.on("end", function() {
-        //     results = parseLayer();
-        // });
-
-        
         try{
             fileData = fs.readFileSync(`./${folderName}/${fileName}.txt`, { encoding: 'utf8'});
             const results = parseLayer();
-            // writeStream.write(JSON.stringify(results["child"]));
             fs.writeFileSync(`./${newFolderName}/${fileName}.json`, JSON.stringify(results["child"], null, 2));
         } catch(e){
             console.log(fileName, e)
         }
-        
-        
     });
 }
-runAll('0507_側錄檔_object')
+// runAll('testSet2')
 
 // run one file
 function runOne(){
-    const fileName = 'bike_patch_VGG19_VGG19';
+    const fileName = 'toaster_patch_VGG16';
     fileData = fs.readFileSync(`./0225_側錄檔/${fileName}.txt`, { encoding: 'utf8'});
     const results = parseLayer();
-    // const outputFileName = `bike2.json`;
-    fs.writeFileSync(`./0413_json_${output_type}/${fileName}.json`, JSON.stringify(results['child'], null, 2));
+    fs.writeFileSync(`./0225_json_${output_type}_new/${fileName}.json`, JSON.stringify(results['child']));
 }
-// runOne()
+runOne()
