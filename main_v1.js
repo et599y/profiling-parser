@@ -144,6 +144,6 @@ function runOne(){
     const fileName = 'toaster_patch_VGG16';
     fileData = fs.readFileSync(`./0225_側錄檔/${fileName}.txt`, { encoding: 'utf8'});
     const results = parseLayer();
-    fs.writeFileSync(`./0225_json_${output_type}_new/${fileName}.json`, JSON.stringify(results['child']));
+    fs.writeFileSync(`./0225_json_${output_type}_new/${fileName}.json`, JSON.stringify(results['child'], null, 2));
 }
 runOne()
