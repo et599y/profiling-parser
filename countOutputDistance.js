@@ -4,7 +4,8 @@ var _ = require('underscore');
 var scaler = require('minmaxscaler');
 var json2xls = require('json2xls');
 const fileDir = '0507_json_return' // change file dir
-var output_type = "float" // change type: str, int, float, bool
+const outputDir = 'OutputDiff'
+var output_type = "str" // change type: str, int, float, bool
 var num = 0
 
 // 計算字串相異度
@@ -34,51 +35,44 @@ const levenshteinDistance = (str1 = '', str2 = '') => {
 let org_cat = JSON.parse(fs.readFileSync(`./${fileDir}/org_1.json`)); // baseline
 fs.readdirSync(`./${fileDir}/`).forEach(file => {
     const fileName = file.split('.')[0];
-    // if (fileName.includes('VGG19')) {
-        console.log(fileName)
-        fileData = JSON.parse(fs.readFileSync(`./${fileDir}/${fileName}.json`));
-        let totaljson = []
-        for (let i = 0; i < org_cat.length; i++) {
-            num = 0
-            if(org_cat[i].return.split(':')[0] == output_type && fileData[i].return.split(':')[0] == output_type){  // 第一層 有無該型別 
-                let d1 = org_cat[i].return.split(':')[1].trim() // 去掉多餘字符
-                let d2 = fileData[i].return.split(':')[1].trim()
-                if(d1 != d2) num = Euclidean(d1, d2) // 計算兩個file output vale distance
-            }
-            temp = [{ name: org_cat[i].name, count: num }] 
-
-            // 第二層
-            for(let x=0; x<org_cat[i].child.length; x++){
-                let funcName = org_cat[i].child[x].name
-                num = 0
-                // if(fileData[i].child[x].return != org_cat[i].child[x].return) num = 1 //第二層不同 count加一 
-                if(org_cat[i].child[x].return.split(':')[0] == output_type && fileData[i].child[x].return.split(':')[0] == output_type){
-                    let d1 = org_cat[i].child[x].return.split(':')[1].trim()
-                    let d2 = fileData[i].child[x].return.split(':')[1].trim()
-                    if(d1 != d2) num += Euclidean(d1, d2)
-                }
-                countFunc(org_cat[i].child[x].child, fileData[i].child[x].child) //第三層
-                tempCheck(funcName, num)
-                // temp.push({ name: funcName, count: num }) 
-            }
-            // console.log(temp)
-            totaljson = totaljson.concat(temp);
+    console.log(fileName)
+    fileData = JSON.parse(fs.readFileSync(`./${fileDir}/${fileName}.json`));
+    let totaljson = []
+    for (let i = 0; i < org_cat.length; i++) {
+        num = 0
+        if(org_cat[i].return.split(':')[0] == output_type && fileData[i].return.split(':')[0] == output_type){  // check 第一層 有無該型別 
+            // 去掉多餘字符
+            let d1 = org_cat[i].return.split(':')[1].trim() 
+            let d2 = fileData[i].return.split(':')[1].trim()
+            if(d1 != d2) num = Euclidean(d1, d2) // 計算兩個file output value distance
         }
-        // let countMap = totaljson.map(x => x.count)
-        // if(countMap.every(x => x == 0) == false){ //若count不是全部為0才做min max scaler
-        //     let scaleData = scaler.fit_transform(countMap); // minmax scaler
-        //     for(var t=0; t<scaleData.length;t++){
-        //         totaljson[t].count = scaleData[t]
-        //     }
-        // }
-        fs.writeFileSync(`./${fileName}.xlsx`, json2xls(totaljson), 'binary'); // 結果存為excel
-    // }
+        temp = [{ name: org_cat[i].name, count: num }] // 暫存結果
+
+        // 第二層
+        for(let x=0; x<org_cat[i].child.length; x++){
+            let funcName = org_cat[i].child[x].name
+            num = 0 
+            if(org_cat[i].child[x].return.split(':')[0] == output_type && fileData[i].child[x].return.split(':')[0] == output_type){
+                let d1 = org_cat[i].child[x].return.split(':')[1].trim()
+                let d2 = fileData[i].child[x].return.split(':')[1].trim()
+                if(d1 != d2) num += Euclidean(d1, d2)
+            }
+            countFunc(org_cat[i].child[x].child, fileData[i].child[x].child) // 第三層以下
+            tempCheck(funcName, num)
+        }
+        totaljson = totaljson.concat(temp);
+    
+    }
+    // 建立資料夾
+    if (!fs.existsSync(`./${outputDir}`)) {
+        fs.mkdirSync(`./${outputDir}`)
+    }
+    fs.writeFileSync(`./${outputDir}/${fileName}.xlsx`, json2xls(totaljson), 'binary'); // 結果存為excel
 });
 
 function countFunc(benchmark, data) {
     // 判斷array size是否為空
     if (benchmark.length > 0) {
-        // console.log('aaa', benchmark, data)
         for (let i = 0; i < benchmark.length; i++) {
             if(data[i]){
                 if(benchmark[i].name == data[i].name && (benchmark[i].return.split(':')[0] == output_type && data[i].return.split(':')[0] == output_type)){
@@ -107,7 +101,7 @@ function Euclidean(data1, data2){
                 return levenshteinDistance(data1, data2)
             }
         case 'bool':
-            return 1;
+            return 1; // 若不相等 差異值為1
     } 
 }
 
