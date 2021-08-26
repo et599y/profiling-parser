@@ -5,59 +5,47 @@ var fs = require('fs'),
 const { resolve } = require('path');
 
 let funcArr = [];
-const fileDir = '0225_json_func_new' // input file dir 
+const fileDir = '0507_json_func' // input file dir 
 const outputDir = 'func_call' // save file dir
+// 建立資料夾
+if (!fs.existsSync(`./${outputDir}`)) {
+    fs.mkdirSync(`./${outputDir}`)
+}
 
-async function auto_count(){
+async function auto_count() {
     const files = fs.readdirSync(`./${fileDir}/`);
     for (let i = 0; i < files.length; i++) {
         const file = files[i];
         const fileName = file.split('.')[0];
-        funcArr = []
+        funcArr = [] // 每次清空
         let delta = `./${fileDir}/${file}`;
+        let fileData = JSON.parse(fs.readFileSync(delta));
         console.log(fileName)
-        await countFunc(delta, fileName) 
+        eachFunc(fileData)
+        fs.writeFileSync(`./${outputDir}/${fileName}.json`, JSON.stringify(getFrequency(funcArr), null, 2)) // save results
     }
 }
 auto_count()
 
-// count funcv
-function countFunc(path, outputname){
-    var rd = readline.createInterface({
-        input: fs.createReadStream(path),
-        output: process.stdout
-        // console: false
-    });
-
-    return new Promise(resolve =>{
-        // 逐行讀
-        rd.on('line', function (line) {
-            if(line.includes('name')){
-                const start = line.indexOf('name') + 8
-                const end = line.indexOf('"', start)
-                funcArr.push(line.substring(start, end))
-            }
-        })
-        // 讀檔結束
-        .on('close', function(){  
-            // 建立資料夾
-            if (!fs.existsSync(`./${outputDir}`)) {
-                fs.mkdirSync(`./${outputDir}`)
-            }
-            fs.writeFileSync(`./${outputDir}/${outputname}.json`, JSON.stringify(getFrequency(funcArr), null, 2)) // save results
-            resolve()
-        });
-    });
+function eachFunc(data) {
+    for (let i = 0; i < data.length; i++) {
+        funcArr.push(data[i].name) // 存入func name
+        // 若還有child
+        if (data[i].child.length != 0) {
+            eachFunc(data[i].child)
+        }
+    }
 }
+
 
 // 同func name累加
 function getFrequency(arr) {
     var freq = {};
-    for (var i=0; i<arr.length;i++) {
+    for (var i = 0; i < arr.length; i++) {
         if (freq[arr[i]]) {
-           freq[arr[i]]++;
+            freq[arr[i]]++;
         } else {
-           freq[arr[i]] = 1;
+            freq[arr[i]] = 1;
         }
     }
     return freq;
