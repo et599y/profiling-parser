@@ -2,7 +2,8 @@
 const fs = require('fs');
 let json2xls = require('json2xls');
 
-const fileDir = '0225_json_time' // file dir
+const fileDir = '1215_json_time' // file dir
+const outputDir = 'LayerTime'
 
 fs.readdirSync(`./${fileDir}/`).forEach(file => {
     const fileName = file.split('.')[0];
@@ -28,6 +29,9 @@ fs.readdirSync(`./${fileDir}/`).forEach(file => {
             temp[0].time -= temp[p].time; //第一層時間減掉所有第二層時間
         }
         totaljson = totaljson.concat(temp);
-        fs.writeFileSync(`./${fileName}.xlsx`, json2xls(totaljson), 'binary'); // 結果存為excel 
+        if (!fs.existsSync(`./${outputDir}`)) {
+            fs.mkdirSync(`./${outputDir}`)
+        }
+        fs.writeFileSync(`./${outputDir}/${fileName}.xlsx`, json2xls(totaljson), 'binary'); // 結果存為excel 
     }
 });
