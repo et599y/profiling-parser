@@ -6,13 +6,13 @@
 git clone https://github.com/et599y/profiling-parser.git
 ```
 
-2. install package
+2. install packages
 ```
 npm install
 ```
 
 ## Code description
-> 執行前須確保資料夾、檔案名稱、parser type 等已修改
+> 執行前須確保資料夾、檔案名稱、parser type 等參數已修改
 
 ### Batch processing profiling for CNN model
 ```
@@ -47,7 +47,7 @@ node --max-old-space-size=7168 main_v2.js
 node countDiffNum.js
 ```
 
-### Analytical method
+### Analytical method (依funcion, time, return value細分)
 #### Function
 
 - 統計各 function 呼叫次數
@@ -89,4 +89,13 @@ node countMatrixDistance.js
 - 依前兩層統計 return value diff 次數
 ```
 node countLayerOutputDiff.js
+```
+
+### Differential Analysis (計算A, B, C 三個 Set)
+> 依檔案格式分成兩種寫法，擇其一使用即可
+```
+node patch_differential_analysis.js
+```
+```
+node object_detection_differential_analysis.js
 ```
